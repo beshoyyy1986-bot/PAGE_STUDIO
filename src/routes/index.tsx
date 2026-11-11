@@ -1,23 +1,19 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
+import { supabase } from "@/integrations/supabase/client";
 
-// The home route ships no og:image, so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
 export const Route = createFileRoute("/")({
-  component: Index,
+  ssr: false,
+  head: () => ({
+    meta: [
+      { title: "FBBlaster Pro — أداة عملاء صفحات فيسبوك" },
+      { name: "description", content: "استخراج المحادثات الفعلية لصفحاتك وإرسال الرد المحفوظ BM AUTO مع دعم الاستكمال." },
+      { property: "og:title", content: "FBBlaster Pro — أداة عملاء صفحات فيسبوك" },
+      { property: "og:description", content: "استخراج المحادثات الفعلية لصفحاتك وإرسال الرد المحفوظ BM AUTO مع دعم الاستكمال." },
+    ],
+  }),
+  beforeLoad: async () => {
+    const { data } = await supabase.auth.getSession();
+    throw redirect({ to: data.session ? "/dashboard" : "/auth" });
+  },
+  component: () => null,
 });
-
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
-function Index() {
-  return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
-    </div>
-  );
-}
