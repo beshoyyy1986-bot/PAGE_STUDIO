@@ -56,13 +56,14 @@ export type ParsedFile = { customers: Customer[]; missingConversationId: number 
 
 /** Reads an exported JSON/CSV file. Rows without a conversation id cannot be sent and are counted separately. */
 export function parseCustomerFile(fileName: string, text: string): ParsedFile {
-  let rows: Record<string, unknown>[];
+  type RawRow = { conversationId?: unknown; conversation_id?: unknown; participantId?: unknown; participant_id?: unknown; id?: unknown; name?: unknown };
+  let rows: RawRow[];
   if (fileName.toLowerCase().endsWith(".csv")) {
     const lines = text.replace(/^\uFEFF/, "").split(/\r?\n/).filter((l) => l.trim());
     const header = splitCsvLine(lines[0] ?? "");
     rows = lines.slice(1).map((l) => {
       const cols = splitCsvLine(l);
-      return Object.fromEntries(header.map((h, i) => [h, cols[i] ?? ""]));
+      return Object.fromEntries(header.map((h, i) => [h, cols[i] ?? ""])) as RawRow;
     });
   } else {
     const parsed = JSON.parse(text);

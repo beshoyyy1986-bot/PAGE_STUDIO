@@ -12,7 +12,8 @@ export type BrowserCookie = {
 export function parseCookies(raw: string): BrowserCookie[] {
   const text = raw.trim();
   if (!text) throw new Error("الكوكيز فارغة");
-  let list: Record<string, unknown>[] | null = null;
+  type RawCookie = { name?: unknown; value?: unknown; domain?: unknown; path?: unknown; httpOnly?: unknown; secure?: unknown; sameSite?: unknown };
+  let list: RawCookie[] | null = null;
   try {
     const p = JSON.parse(text);
     if (Array.isArray(p)) list = p;

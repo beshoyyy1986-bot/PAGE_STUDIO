@@ -5,6 +5,7 @@ import type { Database } from "@/integrations/supabase/types";
 import { buildBotScript, type BotStatus } from "@/lib/bot-script";
 import { conversationUrl } from "@/lib/customer";
 import { parseCookies } from "@/lib/cookies";
+import type { CdpConnection as Cdp } from "@/lib/cdp.server";
 
 type Ctx = { supabase: SupabaseClient<Database>; userId: string };
 
@@ -49,7 +50,7 @@ export const openSession = createServerFn({ method: "POST" })
       throw new Error("تعذر تسجيل الجلسة: " + (insErr?.message ?? ""));
     }
 
-    let cdp: InstanceType<typeof CdpConnection> | null = null;
+    let cdp: Cdp | null = null;
     try {
       cdp = await CdpConnection.connect(address);
       const sid = await cdp.attachPage();
@@ -96,7 +97,7 @@ export const sendToCustomer = createServerFn({ method: "POST" })
     const { data: profile } = await supabase.from("fb_profiles").select("fb_url").eq("id", customer.profile_id).single();
     const inbox = profile?.fb_url || "https://www.facebook.com/messages";
 
-    let cdp: InstanceType<typeof CdpConnection>;
+    let cdp: Cdp;
     try {
       cdp = await CdpConnection.connect(session.address);
     } catch (e) {
@@ -224,8 +225,9 @@ export const startRemoteView = createServerFn({ method: "POST" })
     if (!s) throw new Error("الجلسة غير موجودة");
     const r = await cbPost("/Browser/StartRemoteDesktop", { address: s.address });
     const id = browserIdFromAddress(s.address);
-    if (!r.body.success || !r.body.password || !id) throw new Error("تعذر تشغيل العرض المباشر: " + JSON.stringify(r.body).slice(0, 200));
-    return { url: `https://browser.cloudbrowser.ai/${id}/${r.body.password}` };
+    const password = r.body["password"];
+    if (!r.body["success"] || !password || !id) throw new Error("تعذر تشغيل العرض المباشر: " + JSON.stringify(r.body).slice(0, 200));
+    return { url: `https://browser.cloudbrowser.ai/${id}/${String(password)}` };
   });
 
 export const whoOwns = createServerFn({ method: "POST" })
