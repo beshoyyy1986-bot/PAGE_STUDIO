@@ -28,7 +28,7 @@ function authErrorMessage(err: unknown): string {
   const code = e?.code ?? "";
   const msg = (e?.message ?? String(err)).toLowerCase();
   if (code === "weak_password" || msg.includes("weak") || msg.includes("easy to guess"))
-    return "كلمة المرور دي ضعيفة أو ظهرت في تسريبات قبل كده. اختاري كلمة أطول (12 حرف أو أكثر) فيها حروف وأرقام ورموز.";
+    return "كلمة المرور قصيرة جداً (أقل حاجة 6 حروف).";
   if (code === "invalid_credentials" || msg.includes("invalid login"))
     return "البريد أو كلمة المرور غلط.";
   if (code === "user_already_exists" || msg.includes("already registered"))
@@ -63,7 +63,7 @@ function AuthPage() {
         });
         if (error) throw error;
         if (data.session) navigate({ to: "/dashboard", replace: true });
-        else toast.success("تم إنشاء الحساب. افتح الإيميل لتأكيده ثم سجّل الدخول.");
+        else toast.success("تم إنشاء الحساب، سجّل الدخول.");
       }
     } catch (err) {
       toast.error(authErrorMessage(err));
@@ -80,7 +80,7 @@ function AuthPage() {
             <span className="text-brand">FB</span>Blaster <span className="text-muted-foreground text-base">Pro</span>
           </h1>
           <p className="text-sm text-muted-foreground">
-            {mode === "in" ? "سجّل الدخول للمتابعة" : "إنشاء حساب المالك (أول حساب فقط يُسمح له بالتشغيل)"}
+            {mode === "in" ? "سجّل الدخول للمتابعة" : "إنشاء حساب جديد"}
           </p>
         </div>
         <div className="space-y-2">
@@ -89,12 +89,7 @@ function AuthPage() {
         </div>
         <div className="space-y-2">
           <Label htmlFor="password">كلمة المرور</Label>
-          <Input id="password" type="password" dir="ltr" required minLength={6} value={password} onChange={(e) => setPassword(e.target.value)} />
-          {mode === "up" && (
-            <p className="text-xs text-muted-foreground">
-              استخدمي كلمة قوية وغير مشهورة: 12 حرف أو أكثر، فيها حروف وأرقام ورموز.
-            </p>
-          )}
+          <Input id="password" type="password" dir="ltr" required value={password} onChange={(e) => setPassword(e.target.value)} />
         </div>
         <Button type="submit" className="w-full" disabled={busy}>
           {busy ? "..." : mode === "in" ? "دخول" : "إنشاء حساب"}

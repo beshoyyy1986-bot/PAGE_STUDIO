@@ -15,6 +15,13 @@
       "when": 1794383118309,
       "tag": "0001_extract_resume_columns",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1794386124684,
+      "tag": "0002_protected_admins",
+      "breakpoints": true
     }
   ]
 }
