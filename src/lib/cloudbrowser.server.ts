@@ -37,17 +37,17 @@ export type CbBrowser = { address: string; label: string; startedOn?: string };
 /** Live browsers on the account. Returns null when the service could not be read. */
 export async function listBrowsers(): Promise<CbBrowser[] | null> {
   const r = await cbGet("/Browser/Get");
-  if (r.httpStatus !== 200 || !Array.isArray(r.body.browsers)) return null;
-  return (r.body.browsers as Record<string, unknown>[]).map((b) => ({
-    address: String(b.address ?? b.Address ?? ""),
-    label: String(b.label ?? b.Label ?? ""),
-    startedOn: b.startedOn ? String(b.startedOn) : undefined,
+  if (r.httpStatus !== 200 || !Array.isArray(r.body["browsers"])) return null;
+  return (r.body["browsers"] as Record<string, unknown>[]).map((b) => ({
+    address: String(b["address"] ?? b["Address"] ?? ""),
+    label: String(b["label"] ?? b["Label"] ?? ""),
+    startedOn: b["startedOn"] ? String(b["startedOn"]) : undefined,
   }));
 }
 
 export async function openBrowser(label: string) {
   const r = await cbPost("/Browser/Open", { label, keepOpen: 0, headless: false, stealth: true });
-  const address = typeof r.body.address === "string" ? r.body.address : null;
+  const address = typeof r.body["address"] === "string" ? r.body["address"] : null;
   if (r.httpStatus !== 200 || !address) {
     throw new Error(`فشل فتح المتصفح السحابي: ${r.networkError ?? JSON.stringify(r.body).slice(0, 300)}`);
   }
@@ -62,7 +62,7 @@ const sleep = (ms: number) => new Promise((res) => setTimeout(res, ms));
  */
 export async function closeBrowserVerified(address: string): Promise<{ closed: boolean; detail: string }> {
   const r = await cbPost("/Browser/Close", { address });
-  if (r.httpStatus !== 200 || r.body.success === false) {
+  if (r.httpStatus !== 200 || r.body["success"] === false) {
     return { closed: false, detail: `رد الإغلاق: ${r.networkError ?? JSON.stringify(r.body).slice(0, 200)}` };
   }
   for (let i = 0; i < 4; i++) {
