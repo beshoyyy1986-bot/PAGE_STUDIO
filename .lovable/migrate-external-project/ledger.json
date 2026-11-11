@@ -1,0 +1,9 @@
+[
+  {"capability":"UI (extract + send tabs, profiles)","source":"public/index.html","outcome":"migrate","status":"verified","next_action":null},
+  {"capability":"Local Express bridge + puppeteer-core","source":"server.js","outcome":"replaced by server functions + CDP WebSocket client","status":"verified","next_action":null},
+  {"capability":"CloudBrowser open/close/list/remote desktop","source":"server.js","outcome":"migrate (key stored as CLOUDBROWSER_API_KEY secret)","status":"verified open/close/list; remote view untested","next_action":"Try the View button on a live session"},
+  {"capability":"Facebook Graph extraction + counting","source":"index.html","outcome":"migrate with conversation-id keyed records and resumable cursor","status":"implemented, not run against a real token","next_action":"Owner enters a real page token"},
+  {"capability":"Saved reply send (BM AUTO)","source":"index.html bot script","outcome":"migrate","status":"pipeline verified with fake cookies; real send untested","next_action":"Owner tests with real cookies on one conversation"},
+  {"capability":"Profiles/processed list in localStorage","source":"index.html","outcome":"moved to Lovable Cloud tables","status":"verified","next_action":null},
+  {"capability":"Auth","source":"none (local tool)","outcome":"email/password, single owner","status":"verified","next_action":null}
+]

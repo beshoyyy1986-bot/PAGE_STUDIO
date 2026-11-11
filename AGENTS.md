@@ -28,3 +28,12 @@ use the editor.
   own key and store it in Secrets.
 - **Secrets.** Lovable manages them. Do not put secret values in the repo.
 <!-- LOVABLE:END -->
+
+## Project rules
+- Customers are keyed by Facebook conversation id; participant id and name are stored separately and message counts are never used. Why: the goal is the page's real conversation count and opening the right thread.
+- Cloud browser control is stateless: every server function opens a short CDP WebSocket (`src/lib/cdp.server.ts`) to the address stored in `cloud_sessions`. Why: Workers keep no memory between requests, and this makes resume after refresh/restart work.
+- A cloud session is marked closed only after it disappears from CloudBrowser's `/Browser/Get` list. Why: `/Browser/Close` returns success even for unknown addresses.
+- CloudBrowser `ws://` addresses must be upgraded to `wss://` before connecting. Why: the plain address only answers with a redirect.
+- Rows are marked `in_progress` before a send and never auto-resent. Why: an interrupted send may already have delivered the message.
+- Server actions that spend cloud credits call `assertOwner`: the first signed-in account claims the single `app_owner` row. Why: the tool is for one owner.
+- Server function modules live in `src/lib/*.functions.ts`; `src/server/**` is blocked from client imports.
