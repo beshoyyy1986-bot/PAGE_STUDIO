@@ -23,6 +23,23 @@ export const Route = createFileRoute("/auth")({
   component: AuthPage,
 });
 
+function authErrorMessage(err: unknown): string {
+  const e = err as { code?: string; message?: string } | null;
+  const code = e?.code ?? "";
+  const msg = (e?.message ?? String(err)).toLowerCase();
+  if (code === "weak_password" || msg.includes("weak") || msg.includes("easy to guess"))
+    return "كلمة المرور دي ضعيفة أو ظهرت في تسريبات قبل كده. اختاري كلمة أطول (12 حرف أو أكثر) فيها حروف وأرقام ورموز.";
+  if (code === "invalid_credentials" || msg.includes("invalid login"))
+    return "البريد أو كلمة المرور غلط.";
+  if (code === "user_already_exists" || msg.includes("already registered"))
+    return "الحساب ده موجود بالفعل، سجّلي الدخول بدل إنشاء حساب.";
+  if (code === "email_not_confirmed" || msg.includes("not confirmed"))
+    return "لازم تأكدي البريد الأول من الرسالة اللي وصلتك.";
+  if (code === "over_email_send_rate_limit" || msg.includes("rate limit"))
+    return "محاولات كتير في وقت قصير، استني شوية وجربي تاني.";
+  return e?.message ?? String(err);
+}
+
 function AuthPage() {
   const navigate = useNavigate();
   const [mode, setMode] = useState<"in" | "up">("in");
@@ -49,7 +66,7 @@ function AuthPage() {
         else toast.success("تم إنشاء الحساب. افتح الإيميل لتأكيده ثم سجّل الدخول.");
       }
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : String(err));
+      toast.error(authErrorMessage(err));
     } finally {
       setBusy(false);
     }
@@ -73,6 +90,11 @@ function AuthPage() {
         <div className="space-y-2">
           <Label htmlFor="password">كلمة المرور</Label>
           <Input id="password" type="password" dir="ltr" required minLength={6} value={password} onChange={(e) => setPassword(e.target.value)} />
+          {mode === "up" && (
+            <p className="text-xs text-muted-foreground">
+              استخدمي كلمة قوية وغير مشهورة: 12 حرف أو أكثر، فيها حروف وأرقام ورموز.
+            </p>
+          )}
         </div>
         <Button type="submit" className="w-full" disabled={busy}>
           {busy ? "..." : mode === "in" ? "دخول" : "إنشاء حساب"}
