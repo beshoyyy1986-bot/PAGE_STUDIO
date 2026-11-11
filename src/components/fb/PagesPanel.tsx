@@ -97,7 +97,10 @@ export function PagesPanel(props: {
       toast.error("بيانات الصفحة لم تُحمّل بعد — تأكد من التوكن");
       return;
     }
-    if (extract) return toast.error("في استخراج شغال بالفعل");
+    if (extract) {
+      toast.error("في استخراج شغال بالفعل");
+      return;
+    }
     extractStop.current = false;
     let after = fresh ? null : row.extract_after;
     const seen = new Set<string>();

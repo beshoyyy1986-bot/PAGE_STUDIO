@@ -125,7 +125,8 @@ export function SendPanel(props: {
     try {
       parseCookies(cookies);
     } catch (e) {
-      return toast.error(errText(e));
+      toast.error(errText(e));
+      return;
     }
     await saveSettings();
     const queue = await fetchQueue(profile.id, pageId, retryFailed ? ["pending", "failed"] : ["pending"]);
