@@ -66,3 +66,18 @@ export async function countConversations(page: FbPage, onProgress: (n: number) =
     await sleep(150);
   }
 }
+
+/** Facebook has no real creation date for pages; the oldest post is the closest estimate. */
+export async function getOldestPostDate(page: FbPage, maxBatches = 25) {
+  let url: string | null = withToken(`/${page.id}/posts?fields=created_time&limit=100`, page.access_token);
+  let last: string | null = null;
+  let batches = 0;
+  while (url) {
+    const d = await graphFetch(url);
+    if (d.data?.length) last = d.data[d.data.length - 1].created_time;
+    url = d.paging?.next ?? null;
+    if (++batches >= maxBatches) return { date: last, approx: !!url };
+    await sleep(150);
+  }
+  return { date: last, approx: false };
+}
