@@ -8,6 +8,13 @@
       "when": 1794383012209,
       "tag": "0000_fbblaster_core",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1794383118309,
+      "tag": "0001_extract_resume_columns",
+      "breakpoints": true
     }
   ]
 }

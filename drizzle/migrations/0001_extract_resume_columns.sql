@@ -1,0 +1,1 @@
+ALTER TABLE public.fb_pages ADD COLUMN extract_after text, ADD COLUMN extract_done boolean NOT NULL DEFAULT false, ADD COLUMN extracted_count integer NOT NULL DEFAULT 0;

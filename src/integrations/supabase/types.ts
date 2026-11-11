@@ -134,6 +134,9 @@ export type Database = {
           conversation_count: number | null
           count_complete: boolean
           counted_at: string | null
+          extract_after: string | null
+          extract_done: boolean
+          extracted_count: number
           fan_count: number
           name: string
           oldest_post_at: string | null
@@ -146,6 +149,9 @@ export type Database = {
           conversation_count?: number | null
           count_complete?: boolean
           counted_at?: string | null
+          extract_after?: string | null
+          extract_done?: boolean
+          extracted_count?: number
           fan_count?: number
           name: string
           oldest_post_at?: string | null
@@ -158,6 +164,9 @@ export type Database = {
           conversation_count?: number | null
           count_complete?: boolean
           counted_at?: string | null
+          extract_after?: string | null
+          extract_done?: boolean
+          extracted_count?: number
           fan_count?: number
           name?: string
           oldest_post_at?: string | null
