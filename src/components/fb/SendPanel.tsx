@@ -15,7 +15,7 @@ import { parseCustomerFile } from "@/lib/customer";
 import { parseCookies } from "@/lib/cookies";
 import { SAVED_REPLY_MARKER } from "@/lib/bot-script";
 import { fetchQueue, sessionsQuery, statsQuery, upsertCustomers } from "@/lib/fb-store";
-import { closeSession, openSession, reattachSession, sendToCustomer, startRemoteView, syncSessions } from "@/server/fb.functions";
+import { closeSession, openSession, reattachSession, sendToCustomer, startRemoteView, syncSessions } from "@/lib/fb.functions";
 import { Panel, Stat } from "./Panel";
 import { ActivityLog } from "./ActivityLog";
 import type { LogEntry, Logger } from "./use-log";

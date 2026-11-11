@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { getOldestPostDate, getPages, type FbPage } from "@/lib/facebook";
 import { pagesQuery, profilesQuery } from "@/lib/fb-store";
-import { whoOwns } from "@/server/fb.functions";
+import { whoOwns } from "@/lib/fb.functions";
 import { PagesPanel } from "@/components/fb/PagesPanel";
 import { SendPanel } from "@/components/fb/SendPanel";
 import { ActivityLog } from "@/components/fb/ActivityLog";
