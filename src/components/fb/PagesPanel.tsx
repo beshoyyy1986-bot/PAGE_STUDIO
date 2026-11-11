@@ -17,7 +17,7 @@ import type { Logger } from "./use-log";
 type PageRow = Tables<"fb_pages">;
 type Profile = Tables<"fb_profiles">;
 
-const fmt = (n: number) => n.toLocaleString("ar-EG");
+const fmt = (n: number) => n.toLocaleString("en-US");
 
 export function PagesPanel(props: {
   userId: string;
@@ -234,7 +234,7 @@ function ConversationBadge({ row, counting }: { row: PageRow; counting?: number 
   if (counting !== undefined) return <Badge variant="warning">⏳ جاري العد {fmt(counting)}…</Badge>;
   if (row.conversation_count == null) return <Badge variant="muted">💬 لم يُعد بعد</Badge>;
   return (
-    <Badge variant={row.count_complete ? "success" : "warning"} title={row.counted_at ? `آخر عدّ: ${new Date(row.counted_at).toLocaleString("ar-EG")}` : ""}>
+    <Badge variant={row.count_complete ? "success" : "warning"} title={row.counted_at ? `آخر عدّ: ${new Date(row.counted_at).toLocaleString("en-US")}` : ""}>
       💬 {fmt(row.conversation_count)} محادثة{row.count_complete ? "" : "+"}
     </Badge>
   );

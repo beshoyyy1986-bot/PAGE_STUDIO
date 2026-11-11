@@ -25,7 +25,7 @@ export function Stat({ label, value, tone = "default" }: { label: string; value:
   }[tone];
   return (
     <div className="min-w-[78px] rounded-lg border border-border bg-secondary px-3 py-1.5 text-center">
-      <div className={cn("text-lg font-bold tabular-nums leading-tight", color)}>{typeof value === "number" ? value.toLocaleString("ar-EG") : value}</div>
+      <div className={cn("text-lg font-bold tabular-nums leading-tight", color)}>{typeof value === "number" ? value.toLocaleString("en-US") : value}</div>
       <div className="text-[10px] text-muted-foreground">{label}</div>
     </div>
   );

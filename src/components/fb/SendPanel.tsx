@@ -24,7 +24,7 @@ type Profile = Tables<"fb_profiles">;
 type PageRow = Tables<"fb_pages">;
 type Session = Tables<"cloud_sessions">;
 
-const fmt = (n: number) => n.toLocaleString("ar-EG");
+const fmt = (n: number) => n.toLocaleString("en-US");
 const errText = (e: unknown) => (e instanceof Error ? e.message : String(e));
 
 const statusLabel: Record<string, { text: string; variant: "success" | "warning" | "danger" | "muted" }> = {
@@ -285,7 +285,7 @@ export function SendPanel(props: {
           <div className="space-y-4">
             <div className="space-y-2">
               <Label className="text-xs">الجلسات المتوازية: <b>{parallel}</b></Label>
-              <Slider min={1} max={5} step={1} value={[parallel]} onValueChange={(v) => setParallel(v[0] ?? 1)} disabled={running} />
+              <Slider dir="rtl" min={1} max={5} step={1} value={[parallel]} onValueChange={(v) => setParallel(v[0] ?? 1)} disabled={running} />
             </div>
             <div className="flex items-center justify-between gap-2">
               <Label className="text-xs">التحقق من اسم العميل قبل الإرسال</Label>
@@ -343,7 +343,7 @@ export function SendPanel(props: {
                 <div className="flex items-center justify-between gap-2">
                   <div className="min-w-0">
                     <div className="truncate text-sm font-medium" dir="ltr">{s.label}</div>
-                    <div className="text-[11px] text-muted-foreground">{new Date(s.created_at).toLocaleString("ar-EG")}</div>
+                    <div className="text-[11px] text-muted-foreground">{new Date(s.created_at).toLocaleString("en-US")}</div>
                   </div>
                   <Badge variant={st.variant}>{st.text}</Badge>
                 </div>
