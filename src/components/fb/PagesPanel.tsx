@@ -9,7 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
 import { countConversations, getConversationBatch, type FbPage } from "@/lib/facebook";
-import { extractCustomer, toCsv, uniqueByConversation } from "@/lib/customer";
+import { extractCustomer, toCsv, uniqueByConversation, type Customer } from "@/lib/customer";
 import { countCustomers, fetchCustomersForExport, statsQuery, upsertCustomers } from "@/lib/fb-store";
 import { Panel, Stat } from "./Panel";
 import type { Logger } from "./use-log";
@@ -111,7 +111,7 @@ export function PagesPanel(props: {
         const batch = await getConversationBatch(page, after);
         batch.data.forEach((c: { id?: string }) => c.id && seen.add(c.id));
         const customers = uniqueByConversation(
-          batch.data.map((c: Parameters<typeof extractCustomer>[0]) => extractCustomer(c, row.page_id)).filter(Boolean) as ReturnType<typeof extractCustomer>[] as never,
+          batch.data.map((c) => extractCustomer(c, row.page_id)).filter((c): c is Customer => c !== null),
         );
         await upsertCustomers(props.userId, profile.id, row.page_id, customers);
         extracted = await countCustomers(profile.id, row.page_id);
