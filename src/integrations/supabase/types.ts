@@ -14,7 +14,198 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      app_owner: {
+        Row: {
+          created_at: string
+          singleton: boolean
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          singleton?: boolean
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          singleton?: boolean
+          user_id?: string
+        }
+        Relationships: []
+      }
+      cloud_sessions: {
+        Row: {
+          address: string
+          closed_at: string | null
+          created_at: string
+          id: string
+          label: string
+          last_error: string | null
+          profile_id: string | null
+          status: string
+          user_id: string
+        }
+        Insert: {
+          address: string
+          closed_at?: string | null
+          created_at?: string
+          id?: string
+          label?: string
+          last_error?: string | null
+          profile_id?: string | null
+          status?: string
+          user_id: string
+        }
+        Update: {
+          address?: string
+          closed_at?: string | null
+          created_at?: string
+          id?: string
+          label?: string
+          last_error?: string | null
+          profile_id?: string | null
+          status?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cloud_sessions_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "fb_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      customers: {
+        Row: {
+          attempts: number
+          conversation_id: string
+          created_at: string
+          id: string
+          name: string
+          page_id: string
+          participant_id: string
+          profile_id: string
+          send_reason: string | null
+          send_status: string
+          sent_at: string | null
+          user_id: string
+        }
+        Insert: {
+          attempts?: number
+          conversation_id: string
+          created_at?: string
+          id?: string
+          name?: string
+          page_id: string
+          participant_id?: string
+          profile_id: string
+          send_reason?: string | null
+          send_status?: string
+          sent_at?: string | null
+          user_id: string
+        }
+        Update: {
+          attempts?: number
+          conversation_id?: string
+          created_at?: string
+          id?: string
+          name?: string
+          page_id?: string
+          participant_id?: string
+          profile_id?: string
+          send_reason?: string | null
+          send_status?: string
+          sent_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "customers_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "fb_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      fb_pages: {
+        Row: {
+          conversation_count: number | null
+          count_complete: boolean
+          counted_at: string | null
+          fan_count: number
+          name: string
+          oldest_post_at: string | null
+          page_id: string
+          profile_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          conversation_count?: number | null
+          count_complete?: boolean
+          counted_at?: string | null
+          fan_count?: number
+          name: string
+          oldest_post_at?: string | null
+          page_id: string
+          profile_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          conversation_count?: number | null
+          count_complete?: boolean
+          counted_at?: string | null
+          fan_count?: number
+          name?: string
+          oldest_post_at?: string | null
+          page_id?: string
+          profile_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fb_pages_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "fb_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      fb_profiles: {
+        Row: {
+          access_token: string
+          cookies: string
+          created_at: string
+          fb_url: string
+          id: string
+          name: string
+          user_id: string
+        }
+        Insert: {
+          access_token?: string
+          cookies?: string
+          created_at?: string
+          fb_url?: string
+          id?: string
+          name: string
+          user_id: string
+        }
+        Update: {
+          access_token?: string
+          cookies?: string
+          created_at?: string
+          fb_url?: string
+          id?: string
+          name?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
