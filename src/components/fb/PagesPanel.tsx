@@ -27,7 +27,7 @@ export function PagesPanel(props: {
   tokensLoading: boolean;
   tokensError: string | null;
   onSaveToken: (token: string) => Promise<void>;
-  selectedPageId?: string;
+  selectedPageId?: string | undefined;
   onSelectPage: (id: string) => void;
   log: Logger;
 }) {
@@ -93,7 +93,10 @@ export function PagesPanel(props: {
 
   async function runExtraction(row: PageRow, fresh: boolean) {
     const page = tokens.get(row.page_id);
-    if (!page) return toast.error("بيانات الصفحة لم تُحمّل بعد — تأكد من التوكن");
+    if (!page) {
+      toast.error("بيانات الصفحة لم تُحمّل بعد — تأكد من التوكن");
+      return;
+    }
     if (extract) return toast.error("في استخراج شغال بالفعل");
     extractStop.current = false;
     let after = fresh ? null : row.extract_after;
@@ -139,7 +142,10 @@ export function PagesPanel(props: {
 
   async function exportData(row: PageRow, fmtType: "json" | "csv") {
     const rows = await fetchCustomersForExport(profile.id, row.page_id);
-    if (!rows.length) return toast.error("لا يوجد عملاء مستخرجين لهذه الصفحة");
+    if (!rows.length) {
+      toast.error("لا يوجد عملاء مستخرجين لهذه الصفحة");
+      return;
+    }
     const list = rows.map((r) => ({ conversationId: r.conversation_id, participantId: r.participant_id, name: r.name }));
     const content = fmtType === "json" ? JSON.stringify(list, null, 2) : "\uFEFF" + toCsv(list);
     const a = document.createElement("a");
@@ -221,7 +227,7 @@ export function PagesPanel(props: {
   );
 }
 
-function ConversationBadge({ row, counting }: { row: PageRow; counting?: number }) {
+function ConversationBadge({ row, counting }: { row: PageRow; counting?: number | undefined }) {
   if (counting !== undefined) return <Badge variant="warning">⏳ جاري العد {fmt(counting)}…</Badge>;
   if (row.conversation_count == null) return <Badge variant="muted">💬 لم يُعد بعد</Badge>;
   return (
@@ -235,8 +241,8 @@ function SelectedPage(p: {
   row: PageRow;
   profileId: string;
   hasToken: boolean;
-  counting?: number;
-  extracting?: number;
+  counting?: number | undefined;
+  extracting?: number | undefined;
   anyExtract: boolean;
   onCount: () => void;
   onExtract: (fresh: boolean) => void;

@@ -32,7 +32,7 @@ export const cbPost = (path: string, body: unknown) =>
   call(path, { method: "POST", body: JSON.stringify(body ?? {}) });
 export const cbGet = (path: string) => call(path, { method: "GET" });
 
-export type CbBrowser = { address: string; label: string; startedOn?: string };
+export type CbBrowser = { address: string; label: string; startedOn?: string | undefined };
 
 /** Live browsers on the account. Returns null when the service could not be read. */
 export async function listBrowsers(): Promise<CbBrowser[] | null> {
@@ -75,5 +75,5 @@ export async function closeBrowserVerified(address: string): Promise<{ closed: b
 
 export function browserIdFromAddress(address: string): string | null {
   const m = address.match(/\/browser\/([a-f0-9-]+)/i);
-  return m ? m[1] : null;
+  return m?.[1] ?? null;
 }

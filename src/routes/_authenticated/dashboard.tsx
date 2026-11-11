@@ -14,13 +14,13 @@ import { SendPanel } from "@/components/fb/SendPanel";
 import { ActivityLog } from "@/components/fb/ActivityLog";
 import { useLog } from "@/components/fb/use-log";
 
-type Search = { tab?: "pages" | "send"; p?: string; pg?: string };
+type Search = { tab?: "pages" | "send" | undefined; p?: string | undefined; pg?: string | undefined };
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   validateSearch: (s: Record<string, unknown>): Search => ({
-    tab: s.tab === "send" ? "send" : s.tab === "pages" ? "pages" : undefined,
-    p: typeof s.p === "string" ? s.p : undefined,
-    pg: typeof s.pg === "string" ? s.pg : undefined,
+    tab: s["tab"] === "send" ? "send" : s["tab"] === "pages" ? "pages" : undefined,
+    p: typeof s["p"] === "string" ? s["p"] : undefined,
+    pg: typeof s["pg"] === "string" ? s["pg"] : undefined,
   }),
   head: () => ({
     meta: [
@@ -86,10 +86,12 @@ function Dashboard() {
         const { data: rows } = await supabase.from("fb_pages").select("page_id,oldest_post_at").eq("profile_id", profileId);
         for (const p of list) {
           if (rows?.find((r) => r.page_id === p.id)?.oldest_post_at) continue;
-          getOldestPostDate(p)
-            .then((r) => r.date && supabase.from("fb_pages").update({ oldest_post_at: r.date }).eq("profile_id", profileId).eq("page_id", p.id))
-            .then(() => qc.invalidateQueries({ queryKey: ["pages", profileId] }))
-            .catch(() => {});
+          void (async () => {
+            const r = await getOldestPostDate(p);
+            if (!r.date) return;
+            await supabase.from("fb_pages").update({ oldest_post_at: r.date }).eq("profile_id", profileId).eq("page_id", p.id);
+            qc.invalidateQueries({ queryKey: ["pages", profileId] });
+          })().catch(() => {});
         }
       } catch (e) {
         const msg = e instanceof Error ? e.message : String(e);
@@ -125,7 +127,10 @@ function Dashboard() {
   }
 
   async function deleteProfile() {
-    if (!profile || (profiles?.length ?? 0) <= 1) return toast.error("لا يمكن حذف آخر بروفايل");
+    if (!profile || (profiles?.length ?? 0) <= 1) {
+      toast.error("لا يمكن حذف آخر بروفايل");
+      return;
+    }
     if (!confirm(`حذف "${profile.name}" وكل بياناته (الصفحات والعملاء المستخرجين)؟`)) return;
     await supabase.from("fb_profiles").delete().eq("id", profile.id);
     await qc.invalidateQueries({ queryKey: ["profiles"] });

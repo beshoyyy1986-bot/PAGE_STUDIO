@@ -38,7 +38,7 @@ export function SendPanel(props: {
   userId: string;
   profile: Profile;
   pages: PageRow[];
-  selectedPageId?: string;
+  selectedPageId?: string | undefined;
   onSelectPage: (id: string) => void;
   log: Logger;
   entries: LogEntry[];
@@ -95,7 +95,10 @@ export function SendPanel(props: {
   }
 
   async function onFile(file: File) {
-    if (!pageId) return toast.error("اختر الصفحة أولاً");
+    if (!pageId) {
+      toast.error("اختر الصفحة أولاً");
+      return;
+    }
     try {
       const parsed = parseCustomerFile(file.name, await file.text());
       await upsertCustomers(props.userId, profile.id, pageId, parsed.customers);
@@ -115,7 +118,10 @@ export function SendPanel(props: {
   }
 
   async function start() {
-    if (!pageId) return toast.error("اختر الصفحة أولاً");
+    if (!pageId) {
+      toast.error("اختر الصفحة أولاً");
+      return;
+    }
     try {
       parseCookies(cookies);
     } catch (e) {
@@ -123,7 +129,10 @@ export function SendPanel(props: {
     }
     await saveSettings();
     const queue = await fetchQueue(profile.id, pageId, retryFailed ? ["pending", "failed"] : ["pending"]);
-    if (!queue.length) return toast.info("لا يوجد عملاء في الانتظار لهذه الصفحة");
+    if (!queue.length) {
+      toast.info("لا يوجد عملاء في الانتظار لهذه الصفحة");
+      return;
+    }
 
     stopRef.current = false;
     setRunning(true);
@@ -275,7 +284,7 @@ export function SendPanel(props: {
           <div className="space-y-4">
             <div className="space-y-2">
               <Label className="text-xs">الجلسات المتوازية: <b>{parallel}</b></Label>
-              <Slider min={1} max={5} step={1} value={[parallel]} onValueChange={(v) => setParallel(v[0])} disabled={running} />
+              <Slider min={1} max={5} step={1} value={[parallel]} onValueChange={(v) => setParallel(v[0] ?? 1)} disabled={running} />
             </div>
             <div className="flex items-center justify-between gap-2">
               <Label className="text-xs">التحقق من اسم العميل قبل الإرسال</Label>

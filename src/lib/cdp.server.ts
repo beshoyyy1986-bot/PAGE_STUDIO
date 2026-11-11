@@ -79,7 +79,7 @@ export class CdpConnection {
         reject: (e) => (clearTimeout(t), reject(e)),
       });
       const msg: Record<string, unknown> = { id, method, params };
-      if (sessionId) msg.sessionId = sessionId;
+      if (sessionId) msg["sessionId"] = sessionId;
       this.ws.send(JSON.stringify(msg));
     });
   }
