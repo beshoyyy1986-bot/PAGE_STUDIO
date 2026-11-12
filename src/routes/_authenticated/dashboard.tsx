@@ -20,7 +20,8 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
   validateSearch: (s: Record<string, unknown>): Search => ({
     tab: s["tab"] === "send" ? "send" : s["tab"] === "pages" ? "pages" : undefined,
     p: typeof s["p"] === "string" ? s["p"] : undefined,
-    pg: typeof s["pg"] === "string" ? s["pg"] : undefined,
+    // Page ids look numeric, so a hand-typed URL may arrive parsed as a number.
+    pg: typeof s["pg"] === "string" ? s["pg"] : typeof s["pg"] === "number" ? String(s["pg"]) : undefined,
   }),
   head: () => ({
     meta: [

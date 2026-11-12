@@ -37,3 +37,5 @@ use the editor.
 - Rows are marked `in_progress` before a send and never auto-resent. Why: an interrupted send may already have delivered the message.
 - Server actions that spend cloud credits call `assertOwner`: the first signed-in account claims the single `app_owner` row. Why: the tool is for one owner.
 - Server function modules live in `src/lib/*.functions.ts`; `src/server/**` is blocked from client imports.
+- Page people are listed from `/roles` but only edited through the owning portfolio's `/{page}/assigned_users` (user token + business id); writes use POST with `method=delete` for removals. Why: Facebook rejects POST/DELETE on `/roles`, and the override avoids CORS preflight issues.
+- A portfolio counts as disabled when it has ad accounts and all are disabled. Why: Graph exposes no portfolio disabled flag to these tokens.
