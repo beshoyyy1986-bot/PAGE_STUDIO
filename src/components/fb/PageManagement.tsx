@@ -43,7 +43,8 @@ export function PageManagement({
   const businesses = useQuery({
     queryKey: ["fb-businesses", userToken],
     queryFn: () => getBusinesses(userToken),
-    staleTime: 120_000,
+    staleTime: 600_000,
+    refetchOnWindowFocus: false,
     retry: false,
   });
   const people = useQuery({

@@ -15,14 +15,16 @@ export function AccountOverview({ token, pagesCount }: { token: string; pagesCou
     queryKey: ["fb-businesses", token],
     queryFn: () => getBusinesses(token),
     enabled: !!token,
-    staleTime: 120_000,
+    staleTime: 600_000,
+    refetchOnWindowFocus: false,
     retry: false,
   });
   const ads = useQuery({
     queryKey: ["fb-adaccounts", token],
     queryFn: () => getAdAccounts(token),
     enabled: !!token,
-    staleTime: 120_000,
+    staleTime: 600_000,
+    refetchOnWindowFocus: false,
     retry: false,
   });
 
