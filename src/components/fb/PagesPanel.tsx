@@ -12,6 +12,8 @@ import { countConversations, getConversationBatch, type FbPage } from "@/lib/fac
 import { extractCustomer, toCsv, uniqueByConversation, type Customer } from "@/lib/customer";
 import { countCustomers, fetchCustomersForExport, statsQuery, upsertCustomers } from "@/lib/fb-store";
 import { Panel, Stat } from "./Panel";
+import { AccountOverview } from "./AccountOverview";
+import { PageManagement } from "./PageManagement";
 import type { Logger } from "./use-log";
 
 type PageRow = Tables<"fb_pages">;
@@ -161,8 +163,10 @@ export function PagesPanel(props: {
   const selected = pages.find((p) => p.page_id === selectedPageId);
 
   return (
-    <div className="flex h-full min-h-0 flex-col gap-4 lg:flex-row">
-      <aside className="flex w-full shrink-0 flex-col gap-3 lg:w-80">
+    <div className="flex h-full min-h-0 flex-col gap-3">
+    <AccountOverview token={profile.access_token} pagesCount={pages.length} />
+    <div className="flex min-h-0 flex-1 flex-col gap-4 lg:flex-row">
+      <aside className="flex w-full shrink-0 flex-col gap-3 overflow-y-auto lg:w-80">
         <Panel title="توكن فيسبوك">
           <div className="space-y-2">
             <Input type="password" dir="ltr" placeholder="EAAxxxxxxxx..." value={token} onChange={(e) => setToken(e.target.value)} />
@@ -185,6 +189,9 @@ export function PagesPanel(props: {
             onStop={() => (extractStop.current = true)}
             onExport={(t) => exportData(selected, t)}
           />
+        )}
+        {selected && tokens.get(selected.page_id) && profile.access_token && (
+          <PageManagement key={selected.page_id} page={tokens.get(selected.page_id)!} pageName={selected.name} userToken={profile.access_token} />
         )}
         <p className="rounded-lg border border-info/25 bg-info/5 p-3 text-xs leading-6 text-info">
           الهدف هو عدد المحادثات الفعلية للصفحة: كل عميل = محادثة واحدة (معرف المحادثة + معرف الشخص + الاسم). لا يتم الاعتماد على عدد الرسائل أو مين بدأ المحادثة.
@@ -226,6 +233,7 @@ export function PagesPanel(props: {
           </div>
         )}
       </div>
+    </div>
     </div>
   );
 }

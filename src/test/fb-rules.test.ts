@@ -60,3 +60,29 @@ describe("sending", () => {
     expect(parseCookies("c_user=1; xs=abc")).toHaveLength(2);
   });
 });
+
+import { adAccountStatus, businessStatusFromAds, roleFromTasks, roleTasks } from "@/lib/fb-business";
+
+describe("ad accounts and page roles", () => {
+  it("labels disabled ad accounts as disabled and active ones as active", () => {
+    expect(adAccountStatus(1)).toMatchObject({ label: "نشط", disabled: false });
+    expect(adAccountStatus(2)).toMatchObject({ label: "معطل", disabled: true });
+    expect(adAccountStatus(3).disabled).toBe(true);
+    expect(adAccountStatus(101).disabled).toBe(true);
+  });
+  it("maps Facebook tasks to the highest role", () => {
+    expect(roleFromTasks(["MANAGE", "ANALYZE"])).toBe("ADMIN");
+    expect(roleFromTasks(["MODERATE", "ADVERTISE"])).toBe("MODERATOR");
+    expect(roleFromTasks([], "Editor")).toBe("EDITOR");
+    expect(roleFromTasks([])).toBeNull();
+  });
+  it("sends the right task set for a role", () => {
+    expect(roleTasks("ANALYST")).toEqual(["ANALYZE"]);
+    expect(roleTasks("ADMIN")).toContain("MANAGE");
+  });
+  it("marks a portfolio disabled only when all its ad accounts are disabled", () => {
+    expect(businessStatusFromAds([2, 2, 101])).toBe(true);
+    expect(businessStatusFromAds([2, 1])).toBe(false);
+    expect(businessStatusFromAds([])).toBe(false);
+  });
+});

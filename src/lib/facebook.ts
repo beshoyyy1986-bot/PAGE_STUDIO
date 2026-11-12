@@ -1,11 +1,11 @@
 // Facebook Graph API calls made from the browser (Graph supports CORS).
-const FB_BASE = "https://graph.facebook.com/v19.0";
+export const FB_BASE = "https://graph.facebook.com/v19.0";
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 const RATE_LIMIT_CODES = new Set([4, 17, 32, 613, 80001, 80006]);
 
 export type FbPage = { id: string; name: string; fan_count?: number; access_token: string };
 
-async function graphFetch(url: string, attempt = 0): Promise<any> {
+export async function graphFetch(url: string, attempt = 0): Promise<any> {
   let d: any;
   try {
     d = await (await fetch(url)).json();
@@ -23,7 +23,7 @@ async function graphFetch(url: string, attempt = 0): Promise<any> {
   return d;
 }
 
-const withToken = (path: string, token: string) =>
+export const withToken = (path: string, token: string) =>
   `${FB_BASE}${path}${path.includes("?") ? "&" : "?"}access_token=${encodeURIComponent(token)}`;
 
 export async function getPages(userToken: string): Promise<FbPage[]> {
