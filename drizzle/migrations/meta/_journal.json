@@ -22,6 +22,13 @@
       "when": 1794386124684,
       "tag": "0002_protected_admins",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1794468390360,
+      "tag": "0003_restrict_app_owner_read",
+      "breakpoints": true
     }
   ]
 }
